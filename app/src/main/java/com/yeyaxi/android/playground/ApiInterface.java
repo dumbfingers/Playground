@@ -10,7 +10,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 
-public interface EndPoint {
+public interface ApiInterface {
     String BASE_URL = "http://jsonplaceholder.typicode.com/";
 
     @GET("posts")

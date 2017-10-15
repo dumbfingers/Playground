@@ -29,7 +29,7 @@ public class MainFragment extends Fragment {
     Unbinder unbinder;
 
     private ApiClient apiClient;
-    private PostAdapter adapter;
+    private PostsAdapter adapter;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -48,7 +48,7 @@ public class MainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         this.apiClient = new ApiClient();
-        this.adapter = new PostAdapter();
+        this.adapter = new PostsAdapter();
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         this.recyclerView.setLayoutManager(llm);
@@ -58,7 +58,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Observable<List<Post>> postsObservable = this.apiClient.getEndPoint().getPosts();
+        Observable<List<Post>> postsObservable = this.apiClient.getApiInterface().getPosts();
         postsObservable
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

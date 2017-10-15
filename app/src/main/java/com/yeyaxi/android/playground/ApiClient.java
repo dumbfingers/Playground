@@ -7,19 +7,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    private EndPoint endPoint;
+    private ApiInterface apiInterface;
 
     public ApiClient() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(EndPoint.BASE_URL)
+                .baseUrl(ApiInterface.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
-        this.endPoint = retrofit.create(EndPoint.class);
+        this.apiInterface = retrofit.create(ApiInterface.class);
     }
 
-    public EndPoint getEndPoint() {
-        return this.endPoint;
+    public ApiInterface getApiInterface() {
+        return this.apiInterface;
     }
 }

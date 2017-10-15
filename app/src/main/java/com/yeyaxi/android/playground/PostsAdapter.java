@@ -14,18 +14,19 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
+public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHolder> {
 
     private List<Post> dataSource;
+    private OnPostClick delegate;
 
     @Override
-    public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PostsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_post, parent, false);
-        return new PostViewHolder(view);
+        return new PostsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, int position) {
+    public void onBindViewHolder(PostsViewHolder holder, int position) {
         if (this.dataSource == null) {
             return;
         }
@@ -34,6 +35,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             return;
         }
         holder.title.setText(post.getTitle());
+
+        holder.itemView.setOnClickListener(view -> {
+            if (this.delegate != null) {
+                this.delegate.onPostClick(post.getId());
+            }
+        });
     }
 
     @Override
@@ -41,18 +48,22 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         return this.dataSource == null ? 0 : this.dataSource.size();
     }
 
+    public void setDelegate(OnPostClick delegate) {
+        this.delegate = delegate;
+    }
+
     public void setDataSource(List<Post> dataSource) {
         this.dataSource = dataSource;
     }
 
-    class PostViewHolder extends RecyclerView.ViewHolder {
+    class PostsViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.image_view)
         ImageView imageView;
         @BindView(R.id.title)
         TextView title;
 
-        public PostViewHolder(View itemView) {
+        public PostsViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
