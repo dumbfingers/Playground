@@ -1,4 +1,4 @@
-package com.yeyaxi.android.playground;
+package com.yeyaxi.android.playground.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.yeyaxi.android.playground.R;
+import com.yeyaxi.android.playground.interfaces.OnPostClick;
 import com.yeyaxi.android.playground.model.Post;
 
 import java.util.List;
@@ -41,6 +43,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
                 this.delegate.onPostClick(post.getId());
             }
         });
+
+//        String uri = Params.IMAGE_BASE_PATH + ;
+//        Picasso.with(holder.itemView.getContext()).load(uri).into(holder.imageView);
     }
 
     @Override

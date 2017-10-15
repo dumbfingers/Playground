@@ -1,4 +1,4 @@
-package com.yeyaxi.android.playground;
+package com.yeyaxi.android.playground.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+import com.yeyaxi.android.playground.constant.Params;
+import com.yeyaxi.android.playground.R;
+import com.yeyaxi.android.playground.api.ApiClient;
 import com.yeyaxi.android.playground.model.Comment;
 import com.yeyaxi.android.playground.model.Post;
 import com.yeyaxi.android.playground.model.User;
@@ -146,6 +150,8 @@ public class DetailFragment extends Fragment {
 
     private void fillUser(User user) {
         this.userName.setText(user.getName());
+        String path = Params.IMAGE_BASE_PATH + user.getEmail() + ".png";
+        Picasso.with(getContext()).load(path).into(this.imageView);
     }
 
     private void fillCommentCount(int size) {

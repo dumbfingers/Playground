@@ -1,4 +1,4 @@
-package com.yeyaxi.android.playground;
+package com.yeyaxi.android.playground.api;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
