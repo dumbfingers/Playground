@@ -22,7 +22,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements OnPostClick {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -49,6 +49,7 @@ public class MainFragment extends Fragment {
 
         this.apiClient = new ApiClient();
         this.adapter = new PostsAdapter();
+        this.adapter.setDelegate(this);
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         this.recyclerView.setLayoutManager(llm);
@@ -86,5 +87,17 @@ public class MainFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         this.unbinder.unbind();
+    }
+
+    @Override
+    public void onPostClick(Long postId) {
+        Bundle args = new Bundle();
+        args.putLong(Params.PARAM_POST_ID, postId);
+        DetailFragment fragment = DetailFragment.newInstance(args);
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack("detail")
+                .replace(R.id.container, fragment)
+                .commit();
     }
 }
