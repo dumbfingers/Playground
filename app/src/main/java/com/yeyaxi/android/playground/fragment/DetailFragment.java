@@ -8,11 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.yeyaxi.android.playground.constant.Params;
 import com.yeyaxi.android.playground.R;
 import com.yeyaxi.android.playground.api.ApiClient;
+import com.yeyaxi.android.playground.constant.Params;
 import com.yeyaxi.android.playground.model.Comment;
 import com.yeyaxi.android.playground.model.Post;
 import com.yeyaxi.android.playground.model.User;
@@ -24,7 +25,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class DetailFragment extends Fragment {
@@ -65,49 +65,28 @@ public class DetailFragment extends Fragment {
 
         if (args != null) {
             Long postId = args.getLong(Params.PARAM_POST_ID);
+            Long userId = args.getLong(Params.PARAM_USER_ID);
 
             Observable<List<Comment>> commentObservable = this.apiClient.getApiInterface().getComments(postId);
-            commentObservable
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeWith(new DisposableObserver<List<Comment>>() {
-                        @Override
-                        public void onNext(List<Comment> comments) {
-                            fillCommentCount(comments.size());
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
-
-
+            Observable<User> userObservable = this.apiClient.getApiInterface().getUser(userId);
             Observable<Post> postObservable = this.apiClient.getApiInterface().getPost(postId);
-            postObservable
-                    .subscribeOn(Schedulers.newThread())
+
+            Observable zipped = Observable.zip(commentObservable, userObservable, postObservable, (comments, user, post) -> {
+                post.setUser(user);
+                post.setComments(comments);
+                return post;
+            });
+
+            zipped.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeWith(new DisposableObserver<Post>() {
-                        @Override
-                        public void onNext(Post post) {
-                            fillView(post);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
+                    .subscribe(
+                            post -> {
+                                this.fillView((Post)post);
+                            },
+                            throwable -> {
+                                showError();
+                            }
+                    );
         }
 
     }
@@ -119,43 +98,31 @@ public class DetailFragment extends Fragment {
     }
 
     private void fillView(Post post) {
+        if (!isResumed() || post == null) {
+            return;
+        }
+
         this.title.setText(post.getTitle());
         this.body.setText(post.getBody());
 
-        Long userId = post.getUserId();
-        Observable<User> userObservable = this.apiClient.getApiInterface().getUser(userId);
-        userObservable
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<User>() {
-                    @Override
-                    public void onNext(User user) {
-                        if (isResumed()) {
-                            fillUser(user);
-                        }
-                    }
+        User user = post.getUser();
+        if (user != null) {
+            this.userName.setText(user.getName());
+            String path = Params.IMAGE_BASE_PATH + user.getEmail() + ".png";
+            Picasso.with(getContext()).load(path).into(this.imageView);
+        }
 
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
+        List<Comment> comments = post.getComments();
+        if (comments != null) {
+            this.commentsCount.setText(String.format(getResources().getQuantityString(R.plurals.plural_comment, comments.size()), comments.size()));
+        }
     }
 
-    private void fillUser(User user) {
-        this.userName.setText(user.getName());
-        String path = Params.IMAGE_BASE_PATH + user.getEmail() + ".png";
-        Picasso.with(getContext()).load(path).into(this.imageView);
-    }
-
-    private void fillCommentCount(int size) {
-        this.commentsCount.setText(String.format(getResources().getQuantityString(R.plurals.plural_comment, size), size));
+    private void showError() {
+        if (!isResumed()) {
+            return;
+        }
+        Toast.makeText(getContext(), R.string.error, Toast.LENGTH_LONG).show();
     }
 }
 

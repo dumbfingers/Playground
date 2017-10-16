@@ -2,7 +2,12 @@ package com.yeyaxi.android.playground.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Post {
+
+    private User user;
+    private List<Comment> comments;
 
     @SerializedName("userId")
     private Long userId;
@@ -46,5 +51,22 @@ public class Post {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Post setUser(User user) {
+        this.user = user;
+        return this;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }
