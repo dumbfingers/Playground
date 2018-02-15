@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="eclipse">#383737</color>
+    <color name="hurricane">#91847D</color>
+    <color name="timberwolf">#D4D3D1</color>
+    <color name="ivory">#F9F9F7</color>
+    <color name="foggy_grey">#A4A4A3</color>
+    <color name="cloud">#BEBDBB</color>
 </resources>

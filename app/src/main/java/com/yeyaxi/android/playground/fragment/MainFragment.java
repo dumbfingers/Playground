@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import com.yeyaxi.android.playground.R;
 import com.yeyaxi.android.playground.adapter.PostsAdapter;
 import com.yeyaxi.android.playground.api.ApiClient;
 import com.yeyaxi.android.playground.constant.Params;
+import com.yeyaxi.android.playground.decorator.ViewDecorator;
 import com.yeyaxi.android.playground.interfaces.OnPostClick;
 import com.yeyaxi.android.playground.model.Post;
 
@@ -59,8 +62,8 @@ public class MainFragment extends Fragment implements OnPostClick {
         this.adapter.setDelegate(this);
         this.adapter.setDataSource(this.posts);
 
-        LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        this.recyclerView.setLayoutManager(llm);
+        setupLayoutManager();
+        setupItemDecoration();
         this.recyclerView.setAdapter(this.adapter);
     }
 
@@ -85,9 +88,7 @@ public class MainFragment extends Fragment implements OnPostClick {
                             this.posts.add(post);
                             this.adapter.notifyItemInserted(this.posts.size() - 1);
                         },
-                        throwable -> {
-                            showError();
-                        },
+                        throwable -> showError(),
                         () -> {});
     }
 
@@ -110,10 +111,25 @@ public class MainFragment extends Fragment implements OnPostClick {
                 .commit();
     }
 
+    private void setupItemDecoration() {
+        int vPadding = getResources().getDimensionPixelSize(R.dimen.carousel_vertical);
+        int hPadding = getResources().getDimensionPixelSize(R.dimen.carousel_horizontal);
+        this.recyclerView.addItemDecoration(new ViewDecorator(hPadding, vPadding));
+    }
+
+    private void setupLayoutManager() {
+        LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(this.recyclerView);
+        this.recyclerView.setLayoutManager(llm);
+    }
+
     private void showError() {
         if (!isResumed()) {
             return;
         }
         Toast.makeText(getContext(), R.string.error, Toast.LENGTH_LONG).show();
     }
+
+
 }
