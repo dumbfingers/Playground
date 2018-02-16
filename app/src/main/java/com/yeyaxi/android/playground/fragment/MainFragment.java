@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.yeyaxi.android.playground.R;
+import com.yeyaxi.android.playground.DynamicScalingLinearLayoutManager;
 import com.yeyaxi.android.playground.adapter.PostsAdapter;
 import com.yeyaxi.android.playground.api.ApiClient;
 import com.yeyaxi.android.playground.constant.Params;
@@ -118,8 +119,8 @@ public class MainFragment extends Fragment implements OnPostClick {
     }
 
     private void setupLayoutManager() {
-        LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        SnapHelper helper = new LinearSnapHelper();
+        DynamicScalingLinearLayoutManager llm = new DynamicScalingLinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        SnapHelper helper = new PagerSnapHelper();
         helper.attachToRecyclerView(this.recyclerView);
         this.recyclerView.setLayoutManager(llm);
     }
