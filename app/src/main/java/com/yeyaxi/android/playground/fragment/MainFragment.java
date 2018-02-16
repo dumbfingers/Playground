@@ -8,12 +8,15 @@ import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.yeyaxi.android.playground.R;
 import com.yeyaxi.android.playground.DynamicScalingLinearLayoutManager;
+import com.yeyaxi.android.playground.R;
 import com.yeyaxi.android.playground.adapter.PostsAdapter;
 import com.yeyaxi.android.playground.api.ApiClient;
 import com.yeyaxi.android.playground.constant.Params;
@@ -97,6 +100,26 @@ public class MainFragment extends Fragment implements OnPostClick {
     public void onDestroyView() {
         super.onDestroyView();
         this.unbinder.unbind();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                Toast.makeText(getContext(), "Search selected", Toast.LENGTH_SHORT)
+                        .show();
+                break;
+            default:
+                break;
+        }
+
+        return true;
     }
 
     @Override

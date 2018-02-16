@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context="com.yeyaxi.android.playground.activity.MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/DarkToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="4dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="0dp"
@@ -13,6 +21,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
 </android.support.constraint.ConstraintLayout>
