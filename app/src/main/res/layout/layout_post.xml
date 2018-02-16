@@ -8,7 +8,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp">
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/image_view"
@@ -21,14 +22,13 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/avatars" />
 
-        <!--<ImageView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="100dp"-->
-            <!--app:layout_constraintLeft_toLeftOf="@id/image_view"-->
-            <!--app:layout_constraintRight_toRightOf="@id/image_view"-->
-            <!--android:src="@drawable/card_top_gradient"-->
-            <!--app:layout_constraintBottom_toBottomOf="@id/image_view"-->
-            <!--app:layout_constraintTop_toTopOf="parent"/>-->
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            app:layout_constraintLeft_toLeftOf="@id/image_view"
+            app:layout_constraintRight_toRightOf="@id/image_view"
+            android:src="@drawable/card_top_gradient"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/title"
@@ -37,6 +37,8 @@
             android:ellipsize="end"
             android:gravity="center"
             android:lines="1"
+            android:textColor="@color/ivory"
+            android:textSize="24sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
