@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.yeyaxi.android.playground.R;
-import com.yeyaxi.android.playground.constant.Params;
 import com.yeyaxi.android.playground.interfaces.OnPostClick;
 import com.yeyaxi.android.playground.model.Post;
+import com.yeyaxi.android.playground.util.AvatarUriUtil;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
             }
         });
 
-        String uri = Params.IMAGE_BASE_PATH + post.getUser().getEmail();
+        String uri = AvatarUriUtil.getAvatarUri(post.getUser().getEmail());
         Picasso.with(holder.itemView.getContext()).load(uri).into(holder.imageView);
     }
 

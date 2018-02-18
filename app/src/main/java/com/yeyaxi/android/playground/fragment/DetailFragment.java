@@ -17,6 +17,7 @@ import com.yeyaxi.android.playground.constant.Params;
 import com.yeyaxi.android.playground.model.Comment;
 import com.yeyaxi.android.playground.model.Post;
 import com.yeyaxi.android.playground.model.User;
+import com.yeyaxi.android.playground.util.AvatarUriUtil;
 
 import java.util.List;
 
@@ -66,35 +67,35 @@ public class DetailFragment extends Fragment {
         if (args != null) {
             Long postId = args.getLong(Params.PARAM_POST_ID);
             Long userId = args.getLong(Params.PARAM_USER_ID);
-
-            Observable<List<Comment>> commentObservable = this.apiClient.getApiInterface().getComments(postId);
-            Observable<User> userObservable = this.apiClient.getApiInterface().getUser(userId);
-            Observable<Post> postObservable = this.apiClient.getApiInterface().getPost(postId);
-
-            Observable zipped = Observable.zip(commentObservable, userObservable, postObservable, (comments, user, post) -> {
-                post.setUser(user);
-                post.setComments(comments);
-                return post;
-            });
-
-            zipped.subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            post -> {
-                                this.fillView((Post)post);
-                            },
-                            throwable -> {
-                                showError();
-                            }
-                    );
+            refreshContent(postId, userId);
         }
-
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    private void refreshContent(Long postId, Long userId) {
+        Observable<List<Comment>> commentObservable = this.apiClient.getApiInterface().getComments(postId);
+        Observable<User> userObservable = this.apiClient.getApiInterface().getUser(userId);
+        Observable<Post> postObservable = this.apiClient.getApiInterface().getPost(postId);
+
+        Observable zipped = Observable.zip(commentObservable, userObservable, postObservable, (comments, user, post) -> {
+            post.setUser(user);
+            post.setComments(comments);
+            return post;
+        });
+
+        zipped.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        post -> this.fillView((Post)post),
+                        throwable -> {
+                            showError();
+                        }
+                );
     }
 
     private void fillView(Post post) {
@@ -108,8 +109,8 @@ public class DetailFragment extends Fragment {
         User user = post.getUser();
         if (user != null) {
             this.userName.setText(user.getName());
-            String path = Params.IMAGE_BASE_PATH + user.getEmail() + ".png";
-            Picasso.with(getContext()).load(path).into(this.imageView);
+            String uri = AvatarUriUtil.getAvatarUri(post.getUser().getEmail());
+            Picasso.with(getContext()).load(uri).into(this.imageView);
         }
 
         List<Comment> comments = post.getComments();
