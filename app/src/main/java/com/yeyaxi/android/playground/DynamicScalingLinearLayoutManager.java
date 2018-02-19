@@ -30,7 +30,7 @@ public class DynamicScalingLinearLayoutManager extends LinearLayoutManager {
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         super.onLayoutChildren(recycler, state);
-        setupDynamicScaling();
+        scrollHorizontallyBy(0, recycler, state);
     }
 
     private void setupDynamicScaling() {
@@ -47,7 +47,7 @@ public class DynamicScalingLinearLayoutManager extends LinearLayoutManager {
             float scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0);
             child.setScaleX(scale);
             child.setScaleY(scale);
-            child.setAlpha(0.8f);
+            child.setAlpha(scale);
         }
     }
 }

@@ -3,6 +3,7 @@ package com.yeyaxi.android.playground.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.yeyaxi.android.playground.DynamicScalingLinearLayoutManager;
 import com.yeyaxi.android.playground.R;
 import com.yeyaxi.android.playground.adapter.PostsAdapter;
@@ -23,6 +25,7 @@ import com.yeyaxi.android.playground.constant.Params;
 import com.yeyaxi.android.playground.decorator.ViewDecorator;
 import com.yeyaxi.android.playground.interfaces.OnPostClick;
 import com.yeyaxi.android.playground.model.Post;
+import com.yeyaxi.android.playground.util.AvatarUriUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +43,8 @@ public class MainFragment extends Fragment implements OnPostClick {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     Unbinder unbinder;
+    @BindView(R.id.background)
+    AppCompatImageView background;
 
     private ApiClient apiClient;
     private PostsAdapter adapter;
@@ -69,6 +74,15 @@ public class MainFragment extends Fragment implements OnPostClick {
         setupLayoutManager();
         setupItemDecoration();
         this.recyclerView.setAdapter(this.adapter);
+        this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+                int index = layoutManager.findFirstCompletelyVisibleItemPosition();
+                updateBackgrounImage(index);
+            }
+        });
         setHasOptionsMenu(true);
     }
 
@@ -156,5 +170,12 @@ public class MainFragment extends Fragment implements OnPostClick {
         Toast.makeText(getContext(), R.string.error, Toast.LENGTH_LONG).show();
     }
 
-
+    private void updateBackgrounImage(int index) {
+        if (index < 0) {
+            return;
+        }
+        Post post = this.posts.get(index);
+        String uri = AvatarUriUtil.getAvatarUri(post.getUser().getEmail());
+        Picasso.with(getContext()).load(uri).into(this.background);
+    }
 }
