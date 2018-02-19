@@ -2,4 +2,5 @@
     <string name="app_name">Playground</string>
     <string name="error">Oops, something went wrong</string>
     <string name="index_counter">%1$d / %2$d</string>
+    <string name="image_transition_name">Image Transition</string>
 </resources>

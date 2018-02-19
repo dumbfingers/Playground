@@ -157,8 +157,11 @@ public class MainFragment extends Fragment implements OnPostClick {
         args.putLong(Params.PARAM_POST_ID, post.getId());
         args.putLong(Params.PARAM_USER_ID, post.getUserId());
         DetailFragment fragment = DetailFragment.newInstance(args);
+        fragment.setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.change_transform));
+        fragment.setExitTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.slide_left));
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
+                .addSharedElement(view, view.getTransitionName())
                 .addToBackStack("detail")
                 .replace(R.id.container, fragment)
                 .commit();

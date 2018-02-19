@@ -1,5 +1,6 @@
 package com.yeyaxi.android.playground.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -51,6 +52,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
         String uri = AvatarUriUtil.getAvatarUri(post.getUser().getEmail());
         Picasso.with(holder.itemView.getContext()).load(uri).into(holder.imageView);
         Picasso.with(holder.itemView.getContext()).load(uri).into(holder.avatarView);
+
+        holder.imageView.setTransitionName(getImageTransitionName(holder.itemView.getContext(), position));
     }
 
     @Override
@@ -64,6 +67,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
 
     public void setDataSource(List<Post> dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public String getImageTransitionName(Context context, int position) {
+        return context.getString(R.string.image_transition_name) + position;
     }
 
     class PostsViewHolder extends RecyclerView.ViewHolder {
