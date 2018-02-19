@@ -44,7 +44,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
         holder.userName.setText(post.getUser().getName());
         holder.itemView.setOnClickListener(view -> {
             if (this.delegate != null) {
-                this.delegate.onPostClick(post);
+                this.delegate.onPostClick(holder.imageView, post);
             }
         });
 

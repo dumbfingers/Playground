@@ -3,11 +3,14 @@ package com.yeyaxi.android.playground.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.support.v7.widget.Toolbar;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,6 +50,8 @@ public class MainFragment extends Fragment implements OnPostClick {
     AppCompatImageView background;
     @BindView(R.id.index_indicator)
     TextView indexIndicator;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private ApiClient apiClient;
     private PostsAdapter adapter;
@@ -67,6 +72,7 @@ public class MainFragment extends Fragment implements OnPostClick {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
 
         this.apiClient = new ApiClient();
         this.adapter = new PostsAdapter();
@@ -86,7 +92,6 @@ public class MainFragment extends Fragment implements OnPostClick {
                 updateIndicator(index, posts.size());
             }
         });
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -141,7 +146,13 @@ public class MainFragment extends Fragment implements OnPostClick {
     }
 
     @Override
-    public void onPostClick(Post post) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(this.toolbar);
+    }
+
+    @Override
+    public void onPostClick(View view, Post post) {
         Bundle args = new Bundle();
         args.putLong(Params.PARAM_POST_ID, post.getId());
         args.putLong(Params.PARAM_USER_ID, post.getUserId());
