@@ -1,5 +1,6 @@
 package com.yeyaxi.android.playground.adapter;
 
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +40,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
             return;
         }
         holder.title.setText(post.getTitle());
-
+        holder.contentPreview.setText(post.getBody());
+        holder.userName.setText(post.getUser().getName());
         holder.itemView.setOnClickListener(view -> {
             if (this.delegate != null) {
                 this.delegate.onPostClick(post);
@@ -48,6 +50,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
 
         String uri = AvatarUriUtil.getAvatarUri(post.getUser().getEmail());
         Picasso.with(holder.itemView.getContext()).load(uri).into(holder.imageView);
+        Picasso.with(holder.itemView.getContext()).load(uri).into(holder.avatarView);
     }
 
     @Override
@@ -69,6 +72,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
         ImageView imageView;
         @BindView(R.id.title)
         TextView title;
+        @BindView(R.id.avatar_view)
+        AppCompatImageView avatarView;
+        @BindView(R.id.user_name)
+        TextView userName;
+        @BindView(R.id.content_preview)
+        TextView contentPreview;
 
         public PostsViewHolder(View itemView) {
             super(itemView);
