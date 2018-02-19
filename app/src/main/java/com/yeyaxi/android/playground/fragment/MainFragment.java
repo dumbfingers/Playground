@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -37,7 +38,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-
 public class MainFragment extends Fragment implements OnPostClick {
 
     @BindView(R.id.recycler_view)
@@ -45,6 +45,8 @@ public class MainFragment extends Fragment implements OnPostClick {
     Unbinder unbinder;
     @BindView(R.id.background)
     AppCompatImageView background;
+    @BindView(R.id.index_indicator)
+    TextView indexIndicator;
 
     private ApiClient apiClient;
     private PostsAdapter adapter;
@@ -78,9 +80,10 @@ public class MainFragment extends Fragment implements OnPostClick {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 int index = layoutManager.findFirstCompletelyVisibleItemPosition();
                 updateBackgrounImage(index);
+                updateIndicator(index, posts.size());
             }
         });
         setHasOptionsMenu(true);
@@ -108,7 +111,7 @@ public class MainFragment extends Fragment implements OnPostClick {
                             this.adapter.notifyItemInserted(this.posts.size() - 1);
                         },
                         throwable -> showError(),
-                        () -> {});
+                        () -> updateIndicator(0, this.posts.size()));
     }
 
     @Override
@@ -171,11 +174,18 @@ public class MainFragment extends Fragment implements OnPostClick {
     }
 
     private void updateBackgrounImage(int index) {
-        if (index < 0) {
+        if (index < 0 || !isResumed()) {
             return;
         }
         Post post = this.posts.get(index);
         String uri = AvatarUriUtil.getAvatarUri(post.getUser().getEmail());
         Picasso.with(getContext()).load(uri).into(this.background);
+    }
+
+    private void updateIndicator(int current, int total) {
+        if (current < 0 || !isResumed()) {
+            return;
+        }
+        this.indexIndicator.setText(getString(R.string.index_counter, current + 1, total));
     }
 }
