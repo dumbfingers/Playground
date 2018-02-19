@@ -69,6 +69,7 @@ public class MainFragment extends Fragment implements OnPostClick {
         setupLayoutManager();
         setupItemDecoration();
         this.recyclerView.setAdapter(this.adapter);
+        setHasOptionsMenu(true);
     }
 
     @Override

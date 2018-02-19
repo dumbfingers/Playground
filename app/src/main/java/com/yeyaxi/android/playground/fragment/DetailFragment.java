@@ -2,7 +2,10 @@ package com.yeyaxi.android.playground.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,15 +39,21 @@ public class DetailFragment extends Fragment {
     TextView userName;
     @BindView(R.id.comments_count)
     TextView commentsCount;
-    @BindView(R.id.title)
-    TextView title;
     @BindView(R.id.body)
     TextView body;
     Unbinder unbinder;
+    @BindView(R.id.backdrop)
+    ImageView backdrop;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.appbar)
+    AppBarLayout appbar;
 
     private ApiClient apiClient;
 
-    public static DetailFragment newInstance(Bundle  extra) {
+    public static DetailFragment newInstance(Bundle extra) {
         DetailFragment fragment = new DetailFragment();
         fragment.setArguments(extra);
         return fragment;
@@ -91,10 +100,8 @@ public class DetailFragment extends Fragment {
         zipped.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        post -> this.fillView((Post)post),
-                        throwable -> {
-                            showError();
-                        }
+                        post -> this.fillView((Post) post),
+                        throwable -> showError()
                 );
     }
 
@@ -103,7 +110,7 @@ public class DetailFragment extends Fragment {
             return;
         }
 
-        this.title.setText(post.getTitle());
+        this.collapsingToolbar.setTitle(post.getTitle());
         this.body.setText(post.getBody());
 
         User user = post.getUser();
@@ -111,6 +118,7 @@ public class DetailFragment extends Fragment {
             this.userName.setText(user.getName());
             String uri = AvatarUriUtil.getAvatarUri(post.getUser().getEmail());
             Picasso.with(getContext()).load(uri).into(this.imageView);
+            Picasso.with(getContext()).load(uri).into(this.backdrop);
         }
 
         List<Comment> comments = post.getComments();
