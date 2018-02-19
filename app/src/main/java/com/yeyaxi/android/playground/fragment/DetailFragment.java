@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.yeyaxi.android.playground.R;
+import com.yeyaxi.android.playground.adapter.CommentsAdapter;
 import com.yeyaxi.android.playground.api.ApiClient;
 import com.yeyaxi.android.playground.constant.Params;
 import com.yeyaxi.android.playground.model.Comment;
@@ -22,6 +25,7 @@ import com.yeyaxi.android.playground.model.Post;
 import com.yeyaxi.android.playground.model.User;
 import com.yeyaxi.android.playground.util.AvatarUriUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,8 +54,12 @@ public class DetailFragment extends Fragment {
     CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.appbar)
     AppBarLayout appbar;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
 
     private ApiClient apiClient;
+    private CommentsAdapter adapter;
+    private List<Comment> comments = new ArrayList<>();
 
     public static DetailFragment newInstance(Bundle extra) {
         DetailFragment fragment = new DetailFragment();
@@ -70,8 +78,15 @@ public class DetailFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
+
         Bundle args = getArguments();
         this.apiClient = new ApiClient();
+
+        this.adapter = new CommentsAdapter();
+
+        setupLayoutManager();
+        this.recyclerView.setAdapter(this.adapter);
 
         if (args != null) {
             Long postId = args.getLong(Params.PARAM_POST_ID);
@@ -123,8 +138,16 @@ public class DetailFragment extends Fragment {
 
         List<Comment> comments = post.getComments();
         if (comments != null) {
+            this.comments = new ArrayList<>(comments);
+            this.adapter.setDataSource(this.comments);
+            this.adapter.notifyDataSetChanged();
             this.commentsCount.setText(String.format(getResources().getQuantityString(R.plurals.plural_comment, comments.size()), comments.size()));
         }
+    }
+
+    private void setupLayoutManager() {
+        LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        this.recyclerView.setLayoutManager(llm);
     }
 
     private void showError() {
