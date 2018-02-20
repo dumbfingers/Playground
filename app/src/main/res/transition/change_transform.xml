@@ -7,4 +7,5 @@
     </targets>
     <changeBounds/>
     <changeTransform/>
+    <changeImageTransform />
 </transitionSet>

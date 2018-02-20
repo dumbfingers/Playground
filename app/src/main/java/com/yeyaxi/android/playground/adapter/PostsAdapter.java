@@ -45,7 +45,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
         holder.userName.setText(post.getUser().getName());
         holder.itemView.setOnClickListener(view -> {
             if (this.delegate != null) {
-                this.delegate.onPostClick(holder.imageView, post);
+                this.delegate.onPostClick(holder.itemView, post);
             }
         });
 
@@ -53,7 +53,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
         Picasso.with(holder.itemView.getContext()).load(uri).into(holder.imageView);
         Picasso.with(holder.itemView.getContext()).load(uri).into(holder.avatarView);
 
-        holder.imageView.setTransitionName(getImageTransitionName(holder.itemView.getContext(), position));
+        holder.itemView.setTransitionName(getImageTransitionName(holder.itemView.getContext(), position));
     }
 
     @Override

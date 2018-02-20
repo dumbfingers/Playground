@@ -10,6 +10,7 @@ import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -158,7 +159,9 @@ public class MainFragment extends Fragment implements OnPostClick {
         args.putLong(Params.PARAM_USER_ID, post.getUserId());
         DetailFragment fragment = DetailFragment.newInstance(args);
         fragment.setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.change_transform));
-        fragment.setExitTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.slide_left));
+        fragment.setEnterTransition(new Explode());
+        fragment.setExitTransition(new Explode());
+        fragment.setSharedElementReturnTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.change_transform));
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .addSharedElement(view, view.getTransitionName())
