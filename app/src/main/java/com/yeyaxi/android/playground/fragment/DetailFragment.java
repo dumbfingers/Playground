@@ -58,6 +58,8 @@ public class DetailFragment extends Fragment {
     AppBarLayout appbar;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.icon_comment)
+    ImageView iconComment;
 
     private ApiClient apiClient;
     private CommentsAdapter adapter;
@@ -151,6 +153,7 @@ public class DetailFragment extends Fragment {
 
         List<Comment> comments = post.getComments();
         if (comments != null) {
+            this.iconComment.setVisibility(View.VISIBLE);
             this.comments = new ArrayList<>(comments);
             this.adapter.setDataSource(this.comments);
             this.adapter.notifyDataSetChanged();

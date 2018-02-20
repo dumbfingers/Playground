@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/card_view"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:animateLayoutChanges="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -108,6 +109,8 @@
                 android:layout_marginTop="8dp"
                 android:src="@mipmap/ic_comment_black"
                 android:tint="@color/foggy_grey"
+                android:visibility="invisible"
+                tools:visibility="visible"
                 app:layout_constraintStart_toEndOf="@id/image_view"
                 app:layout_constraintTop_toBottomOf="@id/body" />
 
@@ -127,7 +130,7 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
+                android:layout_marginTop="8dp"
                 android:paddingBottom="8dp"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 app:layout_constraintBottom_toBottomOf="parent"
